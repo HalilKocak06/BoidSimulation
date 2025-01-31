@@ -3,6 +3,15 @@
 #include <vector>
 #include <cmath>
 
+
+//TODO1:Kuşlar statik şekilde hareket ediyor yani mesela üçgene çektiğimzde şekli , üçgen arka arkaya gidiyor .
+// TODO2:Arada birbirlerinin içine giriyor boidler.
+
+
+
+
+
+
 // ------------------------------------
 // Vector2 Class (2D Vektör İşlemleri)
 // ------------------------------------
@@ -170,25 +179,47 @@ int main()
     sf::RenderWindow window(sf::VideoMode(800, 600), "Boids Simulation");
     window.setFramerateLimit(60);
 
+    std::srand(std::time(nullptr));
+
     std::vector<Boid> flock;
-    flock.push_back(Boid(100, 100));
-    flock.push_back(Boid(200, 200));
-    flock.push_back(Boid(300, 300));
-    flock.push_back(Boid(400, 400));
-    flock.push_back(Boid(500, 500));
-    flock.push_back(Boid(600, 600));
+    for (int i = 0; i <= 20; i++)
+    {
+        float randX = static_cast<float>(std::rand() % 800);  // 0 ile 800 arasında bir x kordinatı yazar.
+        float randY = static_cast<float>(std::rand() % 600);  // 0 ile 600 arasında bir y kordinatı yazar.
+        flock.push_back(Boid(randX, randY)); // Boid'e x ve y'yi tanımlar.
 
-    // Başlangıç hızlarını belirleyelim
-    flock[0].velocity = Vector2(1.5f, -0.5f);
-    flock[1].velocity = Vector2(-1.0f, 0.8f);
-    flock[2].velocity = Vector2(0.3f, -1.2f);
-    flock[3].velocity = Vector2(0.0f, 1.0f);
-    flock[4].velocity = Vector2(0.5f, 0.5f);
-    flock[5].velocity = Vector2(0.5f, 0.5f);
+        //Rastgele hız -2.0 ile 2.0 arasında ...
+        float randVelX = ((std::rand() / (float)RAND_MAX) * 4.0f) - 2.0f;
+        float randVelY = ((std::rand() / (float)RAND_MAX) * 4.0f) - 2.0f;
 
-    sf::CircleShape boidShape(5.f);
+        flock[i].velocity = Vector2(randVelX, randVelY);
+
+
+    }
+    //flock.push_back(Boid(100, 100));
+    //flock.push_back(Boid(200, 200));
+    //flock.push_back(Boid(300, 300));
+    //flock.push_back(Boid(400, 400));
+    //flock.push_back(Boid(500, 500));
+    //flock.push_back(Boid(600, 600));
+
+    //// Başlangıç hızlarını belirleyelim
+    //flock[0].velocity = Vector2(1.5f, -0.5f);
+    //flock[1].velocity = Vector2(-1.0f, 0.8f);
+    //flock[2].velocity = Vector2(0.3f, -1.2f);
+    //flock[3].velocity = Vector2(0.0f, 1.0f);
+    //flock[4].velocity = Vector2(0.5f, 0.5f);
+    //flock[5].velocity = Vector2(0.5f, 0.5f);
+
+    /*sf::CircleShape boidShape(5.f);
     boidShape.setOrigin(5.f, 5.f);
-    boidShape.setFillColor(sf::Color::Yellow);
+    boidShape.setFillColor(sf::Color::Yellow);*/
+
+    sf::ConvexShape boidShape(3);
+    boidShape.setPoint(0, sf::Vector2f(0, -5));
+    boidShape.setPoint(1, sf::Vector2f(3, 5));
+    boidShape.setPoint(2, sf::Vector2f(-3, 5));
+    boidShape.setFillColor(sf::Color::White);
 
     float separationDist = 20.0f;
     float alignmentDist = 50.0f;
@@ -236,8 +267,13 @@ int main()
 
         for (const auto& boid : flock)
         {
+            //Boid yön ayarlama
+            int M_PI = 3;
+            float angle = std::atan2(boid.velocity.y, boid.velocity.x) * 180 / M_PI;
+            boidShape.setRotation(angle + 90);
+
             boidShape.setPosition(boid.position.x, boid.position.y); // burada Boid'leri shape kazandırır.
-            window.draw(boidShape);
+            window.draw(boidShape); //Şekli çizer .
         }
 
         window.display();
