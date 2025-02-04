@@ -18,5 +18,13 @@
     <ClCompile Include="BoidSimulation2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="boid_sim.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="boid.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
